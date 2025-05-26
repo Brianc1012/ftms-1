@@ -1,0 +1,362 @@
+button {
+    outline: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+} 
+
+button:hover {
+    background-color: #f0f0f0;
+}
+  
+.dashboardPage {
+    padding: 1rem;
+    font-family: 'poppins', sans-serif;
+    color: black;
+    width: 100%;
+}
+    
+
+    /*===================ACCOUNTING DASHBOARD===================*/
+    .accounting {
+        display: flex;
+        flex-direction: column;
+        gap: 0rem;
+        margin-bottom: 20px;
+        width: 100%;
+        background-color: rgb(255, 255, 255);
+    }
+
+    .settings {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-bottom: 0rem;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 100%;
+      width: 100%;
+      background-color: none;
+      padding: 0.2rem 1rem;
+    }
+    
+    .settings input[type="text"],
+    .settings input[type="date"],
+    .settings select {
+      padding: 8px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s ease;
+    }
+  
+    .settings input[type="text"]:focus,
+    .settings input[type="date"]:focus,
+    .settings select:focus {
+      outline: none;
+      border-color: #4373A1;
+    }
+  
+    .settings input {
+      outline: 1px solid black;
+      border-radius: 5px;
+    }
+    
+    .settings button{
+      padding: 8px 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      outline: 1px solid black;
+      border-radius: 5px;
+      width: fit-content;
+    }
+
+    .filterDate, .dateRangePicker {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .date {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0.2rem;
+        justify-content: space-between;
+    }
+
+    .date label {
+        font-size: 0.95rem;
+        color: #979797;
+        font-weight: lighter;;
+    }
+    
+    .exportButton {
+      display: flex;
+      gap: 0px;
+      align-items: baseline;
+      margin-bottom: 0rem;
+      justify-content: flex-end;
+      background-color: #961C1E;
+      color: white;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .exportButton:hover {
+      background-color: #7a1618;
+    }
+    
+    .exportButton button {
+      padding: 8px 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: white;
+      width: fit-content;
+    }
+    
+    .importLabel {
+      background-color: #ffffff;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    
+    
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  
+    #categoryFilter {
+      max-width: max-content;
+    }
+    
+    .dataContainer {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        justify-content: space-between;
+        align-items: stretch; /* Ensures children stretch to fill height */
+        background-color: none;
+        padding: 1rem;
+        height: 100vh; /* Ensures the container fills the viewport height */
+        max-height: 600px;
+    }
+
+    .data {
+        display : grid;
+        margin: 0 ;
+        max-width: 50%;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        background-color: none;
+    }
+
+    .dataGrid {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        justify-content: space-between;
+        align-content: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .dataGrid:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .categoryBreakdown {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .categoryItem {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.3rem;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+    }
+
+    .categoryItem span:last-child {
+        font-weight: bold;
+    }
+
+    #emoji {
+        font-size: 3rem;
+        text-align: center;
+        padding: 0.5rem;
+        border: 10px solid #13CE66;
+        border-radius: 1.2rem;
+        width: 100%;
+    }
+
+    #emotion .title{
+        display:flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+    }
+
+    #emotion p {
+        text-align: center;
+        font-size:5rem;
+    }
+    
+    .dataGrid p {
+        font-size: 2rem;
+        font-weight: bolder;
+        margin: 0;
+        text-align: center;
+    }
+
+    #revenue p {
+        color: #13CE66;
+    }
+
+    #revenue {
+        border: 10px solid #13CE66;
+        border-radius: 1.2rem;
+        cursor: pointer;
+    }
+
+    #expenses p {
+        color: #961C1E;
+    }
+
+    #expenses {
+        border: 10px solid #961C1E;
+        border-radius: 1.2rem;
+        cursor: pointer;
+    }
+
+    #profit p {
+        color: #008ABC;
+    }
+
+    #profit {
+        border: 10px solid #008ABC;
+        border-radius: 1.2rem;
+    }
+
+    .emoji {
+        display: flex;
+        background-color: none;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    .emoji video {
+        background-color: none;
+        width: 100px;
+        height: 90%;
+        border-radius: 1.2rem;
+        padding: 0.5rem;
+    }
+
+
+
+    /*GRAPH*/
+    .graph {
+        display: flex;
+        flex-direction: column;
+        gap: 0rem;
+        margin-bottom: 1rem;
+        width: 50%;
+        flex-grow: 1; /* Allows the element to grow and fill available space */
+        background-color: white;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1.2rem;
+        border: 10px solid #FFCC3D;
+        padding: 1rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .graph .title {
+        height: 10%;
+        background-color: none;
+        margin-bottom: 1rem;
+    }
+
+    .pieChartContainer {
+        width: 100%;
+        height: 90%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+
+/* Media query for small screens or narrow widths */
+    
+
+    @media (max-width: 1260px) {
+        .data {
+            max-width: 40%;
+            gap: 0.2rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            background-color: none;
+            max-height: 100%;
+        }
+
+        .dataContainer {
+            flex-direction: row; /* Switch to column layout for smaller widths */
+            width: 100%; /* Adjust width to fit the container */
+            max-height: min-content;
+        }
+
+        .dataGrid {
+            padding: 1rem;
+            gap: 0rem;
+        }
+
+        .dataGrid h2 {
+            font-size: 1rem; 
+            font-weight: bold;
+        }
+
+
+        .dataGrid p {
+            font-size: 1rem; /* Adjust font size for smaller screens */
+        }
+
+        .categoryBreakdown {
+            font-size: 0.8rem;
+        }
+    }
+    
+    @media (max-width: 900px) {
+        .data {
+            max-width: 100%;
+            gap: 0.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            background-color: none;
+        }
+
+        .dataContainer {
+            flex-direction: column; /* Switch to column layout for smaller widths */
+            width: 100%; /* Adjust width to fit the container */
+        }
+
+        .graph {
+            width: 100%; /* Adjust width to fit the container */
+        }
+    }

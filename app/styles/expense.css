@@ -1,0 +1,437 @@
+button {
+    /*outline: 1px solid black;*/
+    border-radius: 5px;
+  } 
+  
+  .expensePage {
+      padding: 20px;
+      background-color: #f5f5f5;
+      min-height: calc(100vh - 40px);
+      font-family: 'poppins', sans-serif;
+      color: black;
+    }
+  
+    .settings {
+      margin-bottom: 2rem;
+    }
+    
+    .settings input[type="text"] {
+      width: 100%;
+      max-width: 300px;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+  
+    .settings input[type="date"],
+    .settings select {
+      padding: 8px;
+      font-size: 1rem;
+    }
+  
+    .settings input {
+      outline: 1px solid black;
+      border-radius: 5px;
+    }
+    
+    .settings button{
+      padding: 8px 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      outline: 1px solid black;
+      border-radius: 5px;
+      width: fit-content;
+    }   
+    
+    .filters {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .searchBar,
+    .datePicker,
+    .categoryDropdown,
+    .addRevenueBtn {
+      padding: 8px;
+      font-size: 14px;
+    }
+  
+    #categoryFilter {
+      max-width: max-content;
+    }
+    
+    #addExpense {
+      padding: 0.5rem 1rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    
+    #addExpense:hover {
+      background-color: #218838;
+    }
+    
+    .tableContainer {
+      margin-top: 2rem;
+      overflow-x: auto;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+  
+    th {
+      background-color: #f8f9fa;
+      font-weight: 500;
+      color: #666;
+    }
+
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    .actionButtons {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    
+    .viewBtn,
+    .editBtn,
+    .deleteBtn {
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    .viewBtn {
+      background-color: #4a90e2;
+      color: white;
+    }
+
+    .viewBtn:hover {
+      background-color: #357abd;
+    }
+
+    .editBtn {
+      background-color: #ffd700;
+      color: #333;
+    }
+
+    .editBtn:hover {
+      background-color: #ffcd00;
+    }
+
+    .deleteBtn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .deleteBtn:hover {
+      background-color: #c82333;
+    }
+    
+    .pagination button {
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      background-color: white;
+      cursor: pointer;
+    }
+    
+    .pagination button:hover {
+      background-color: #eee;
+    }
+    
+    .pagination .active {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .pagination button:disabled {
+      background-color: #f0f0f0;
+      color: #aaa;
+      cursor: not-allowed;
+    }
+    
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      font-size: 1.2rem;
+      color: #666;
+    }
+  
+    @media (max-width: 768px) {
+      .expensePage {
+        padding: 1rem;
+      }
+
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filters input[type="date"],
+      .filters select {
+        width: 100%;
+      }
+
+      #addExpense {
+        width: 100%;
+      }
+
+      th, td {
+        padding: 0.75rem;
+      }
+
+      .actionButtons {
+        flex-direction: column;
+      }
+
+      .viewBtn,
+      .editBtn,
+      .deleteBtn {
+        width: 100%;
+      }
+    }
+  
+    /* Category Input Styles */
+    .categoryInputWrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .categoryInputWrapper input {
+      width: 100%;
+      padding: 8px;
+      padding-right: 30px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .categoryInputWrapper input:focus {
+      outline: none;
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    }
+
+    .clearCategoryBtn {
+      position: absolute;
+      right: 5px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: #666;
+      cursor: pointer;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .clearCategoryBtn:hover {
+      color: #333;
+    }
+    
+    /* View Modal Styles */
+    .modalOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modalContent {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 800px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modalHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modalHeader h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .closeButton {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .closeButton:hover {
+      color: #333;
+    }
+
+    .mainDetails,
+    .operationsDetails,
+    .receiptDetails,
+    .otherDetails {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      border: 1px solid #eee;
+      border-radius: 4px;
+    }
+
+    .mainDetails h3,
+    .operationsDetails h3,
+    .receiptDetails h3,
+    .otherDetails h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .detailRow {
+      display: flex;
+      margin-bottom: 0.75rem;
+      align-items: baseline;
+    }
+
+    .detailRow .label {
+      min-width: 150px;
+      font-weight: 500;
+      color: #666;
+    }
+
+    .detailRow .value {
+      flex: 1;
+      color: #333;
+    }
+
+    .itemsSection {
+      margin-top: 1.5rem;
+    }
+
+    .itemsSection h4 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .itemsSection table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+
+    .itemsSection th,
+    .itemsSection td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    .itemsSection th {
+      background-color: #f8f9fa;
+      font-weight: 500;
+      color: #666;
+    }
+
+    .modalFooter {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .closeBtn {
+      padding: 0.5rem 1rem;
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    .closeBtn:hover {
+      background-color: #5a6268;
+    }
+
+    @media (max-width: 768px) {
+      .modalContent {
+        width: 95%;
+        padding: 1rem;
+      }
+
+      .detailRow {
+        flex-direction: column;
+        margin-bottom: 1rem;
+      }
+
+      .detailRow .label {
+        margin-bottom: 0.25rem;
+      }
+
+      .itemsSection {
+        overflow-x: auto;
+      }
+    }
+    
+    .importExport {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .importExport button {
+      padding: 8px 16px;
+      background-color: #13CE66;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .importExport button:hover {
+      background-color: #0FB85A;
+    }
+    
