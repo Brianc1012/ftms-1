@@ -1,3 +1,18 @@
 {
-  "/api/assignments/cache/route": "app/api/assignments/cache/route.js"
+  "/api/assignments/[id]/route": "app/api/assignments/[id]/route.js",
+  "/api/assignments/cache/route": "app/api/assignments/cache/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/audit/route": "app/api/audit/route.js",
+  "/api/auditlogs/route": "app/api/auditlogs/route.js",
+  "/api/expenses/[id]/route": "app/api/expenses/[id]/route.js",
+  "/api/expenses/route": "app/api/expenses/route.js",
+  "/api/assignments/route": "app/api/assignments/route.js",
+  "/api/export/dashboard/route": "app/api/export/dashboard/route.js",
+  "/api/generate-export-id/route": "app/api/generate-export-id/route.js",
+  "/api/receipts/route": "app/api/receipts/route.js",
+  "/api/revenues/route": "app/api/revenues/route.js",
+  "/api/revenues/[id]/route": "app/api/revenues/[id]/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/api/auditlogs/export/route": "app/api/auditlogs/export/route.js",
+  "/page": "app/page.js"
 }

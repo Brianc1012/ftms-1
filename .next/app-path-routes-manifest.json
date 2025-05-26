@@ -1,0 +1,18 @@
+{
+  "/api/assignments/[id]/route": "/api/assignments/[id]",
+  "/api/assignments/cache/route": "/api/assignments/cache",
+  "/_not-found/page": "/_not-found",
+  "/api/audit/route": "/api/audit",
+  "/api/auditlogs/route": "/api/auditlogs",
+  "/api/expenses/[id]/route": "/api/expenses/[id]",
+  "/api/expenses/route": "/api/expenses",
+  "/api/assignments/route": "/api/assignments",
+  "/api/export/dashboard/route": "/api/export/dashboard",
+  "/api/generate-export-id/route": "/api/generate-export-id",
+  "/api/receipts/route": "/api/receipts",
+  "/api/revenues/route": "/api/revenues",
+  "/api/revenues/[id]/route": "/api/revenues/[id]",
+  "/favicon.ico/route": "/favicon.ico",
+  "/api/auditlogs/export/route": "/api/auditlogs/export",
+  "/page": "/"
+}

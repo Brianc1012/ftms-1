@@ -3,22 +3,28 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { logAudit } from '@/lib/auditLogger';
 
+/**
+ * Type for the second argument sent to a route handler in Next.js 15.
+ * `params` is now delivered as a Promise.
+ */
 type RouteCtx = { params: Promise<{ id: string }> };
 
-// ────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────
 // GET /api/expenses/:id
-// ────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────
 export async function GET(
   _req: NextRequest,
   { params }: RouteCtx
 ) {
   try {
-    const { id } = await params;
+    const { id } = await params; // ⬅️ new: await the promise
 
     const expense = await prisma.expenseRecord.findUnique({
       where: { expense_id: id },
       include: {
-        receipt: { include: { items: true } }
+        receipt: {
+          include: { items: true }
+        }
       }
     });
 
@@ -29,13 +35,16 @@ export async function GET(
     return NextResponse.json(expense);
   } catch (err) {
     console.error('GET /expenses/:id failed:', err);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
 
-// ────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────
 // PUT /api/expenses/:id
-// ────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────
 export async function PUT(
   req: NextRequest,
   { params }: RouteCtx
@@ -49,60 +58,58 @@ export async function PUT(
       other_category
     } = await req.json();
 
-    const originalRecord = await prisma.expenseRecord.findUnique({
+    const original = await prisma.expenseRecord.findUnique({
       where: { expense_id: id },
       include: { receipt: true }
     });
 
-    if (!originalRecord) {
+    if (!original) {
       return NextResponse.json({ error: 'Record not found' }, { status: 404 });
     }
 
     // deviation %
-    let deviationPercentage = 0;
-    if (originalRecord.receipt) {
-      deviationPercentage =
+    let deviation = 0;
+    if (original.receipt) {
+      deviation =
         Math.abs(
           (Number(total_amount) -
-            Number(originalRecord.receipt.total_amount_due)) /
-            Number(originalRecord.receipt.total_amount_due)
+            Number(original.receipt.total_amount_due)) /
+            Number(original.receipt.total_amount_due)
         ) * 100;
     }
 
-    const updatedExpense = await prisma.expenseRecord.update({
+    const updated = await prisma.expenseRecord.update({
       where: { expense_id: id },
       data: {
         total_amount,
         expense_date: new Date(expense_date),
         updated_at: new Date(),
-        other_source: originalRecord.category === 'Other' ? other_source : null,
-        other_category: originalRecord.category === 'Other' ? other_category : null
+        other_source: original.category === 'Other' ? other_source : null,
+        other_category: original.category === 'Other' ? other_category : null
       },
       include: {
         receipt: { include: { items: true } }
       }
     });
 
-    // audit log
+    // audit string
     let details = 'Updated expense record. ';
-    if (Number(total_amount) !== Number(originalRecord.total_amount)) {
-      details += `Amount changed from ₱${originalRecord.total_amount} to ₱${total_amount}. `;
-      if (deviationPercentage > 0) {
-        details += `Deviation from original amount: ${deviationPercentage.toFixed(2)}%. `;
-      }
+    if (Number(total_amount) !== Number(original.total_amount)) {
+      details += `Amount changed from ₱${original.total_amount} to ₱${total_amount}. `;
+      if (deviation > 0) details += `Deviation: ${deviation.toFixed(2)}%. `;
     }
     if (
       new Date(expense_date).getTime() !==
-      new Date(originalRecord.expense_date).getTime()
+      new Date(original.expense_date).getTime()
     ) {
-      details += `Date changed from ${originalRecord.expense_date} to ${expense_date}. `;
+      details += `Date changed from ${original.expense_date} to ${expense_date}. `;
     }
-    if (originalRecord.category === 'Other') {
-      if (other_source !== originalRecord.other_source) {
-        details += `Source changed from "${originalRecord.other_source}" to "${other_source}". `;
+    if (original.category === 'Other') {
+      if (other_source !== original.other_source) {
+        details += `Source "${original.other_source}" → "${other_source}". `;
       }
-      if (other_category !== originalRecord.other_category) {
-        details += `Category changed from "${originalRecord.other_category}" to "${other_category}". `;
+      if (other_category !== original.other_category) {
+        details += `Category "${original.other_category}" → "${other_category}". `;
       }
     }
 
@@ -114,16 +121,19 @@ export async function PUT(
       details
     });
 
-    return NextResponse.json(updatedExpense);
+    return NextResponse.json(updated);
   } catch (err) {
     console.error('PUT /expenses/:id failed:', err);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
 
-// ────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────
 // DELETE /api/expenses/:id
-// ────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────
 export async function DELETE(
   _req: NextRequest,
   { params }: RouteCtx
@@ -131,19 +141,19 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    const expenseToDelete = await prisma.expenseRecord.findUnique({
+    const record = await prisma.expenseRecord.findUnique({
       where: { expense_id: id }
     });
 
-    if (!expenseToDelete || expenseToDelete.is_deleted) {
+    if (!record || record.is_deleted) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    // reset flags on related assignment / receipt
-    if (expenseToDelete.assignment_id) {
+    /* Reset related flags (Supabase + cache) */
+    if (record.assignment_id) {
       try {
         await fetch(
-          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/op_bus_assignments?assignment_id=eq.${expenseToDelete.assignment_id}`,
+          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/op_bus_assignments?assignment_id=eq.${record.assignment_id}`,
           {
             method: 'PATCH',
             headers: {
@@ -156,20 +166,20 @@ export async function DELETE(
         );
 
         await prisma.assignmentCache.update({
-          where: { assignment_id: expenseToDelete.assignment_id },
+          where: { assignment_id: record.assignment_id },
           data: {
             is_expense_recorded: false,
             last_updated: new Date()
           }
         });
       } catch (err) {
-        console.error('Failed to update assignment flags:', err);
+        console.error('Assignment flag reset failed:', err);
       }
     }
 
-    if (expenseToDelete.receipt_id) {
+    if (record.receipt_id) {
       await prisma.receipt.update({
-        where: { receipt_id: expenseToDelete.receipt_id },
+        where: { receipt_id: record.receipt_id },
         data: { is_expense_recorded: false }
       });
     }
@@ -187,10 +197,10 @@ export async function DELETE(
       table_affected: 'ExpenseRecord',
       record_id: id,
       performed_by: 'ftms_user',
-      details: `Soft-deleted expense record. Details: ${JSON.stringify({
-        category: expenseToDelete.category,
-        amount: expenseToDelete.total_amount,
-        date: expenseToDelete.expense_date
+      details: `Soft-deleted record: ${JSON.stringify({
+        category: record.category,
+        amount: record.total_amount,
+        date: record.expense_date
       })}`
     });
 

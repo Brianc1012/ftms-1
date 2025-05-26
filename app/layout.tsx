@@ -13,15 +13,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const inter = Inter({
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
 
-export const poppins = Poppins({
+const poppins = Poppins({
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "700"], // Specify the desired font weights
+  weight: ["400", "700"],
 });
 
 // Metadata for the app
