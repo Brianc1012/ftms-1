@@ -1,95 +1,94 @@
 // app/api/assignments/cache/route.ts
-import { prisma } from '@/lib/prisma'
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/client'
-import type { Assignment } from '@/lib/supabase/assignments'
+export const dynamic = 'force-dynamic';   // ←  ⬅️ this is the fix
+// or: export const runtime = 'nodejs';
 
-// GET - Return all cached assignments
+import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase/client';
+import type { Assignment } from '@/lib/supabase/assignments';
+
+/*  ─────────────────────────────────────────────────────────
+    GET – Return all cached assignments
+    ───────────────────────────────────────────────────────── */
 export async function GET() {
   try {
-    // First try to get from cache
     let cachedAssignments = await prisma.assignmentCache.findMany();
-    
-    // If cache is empty, fetch from Supabase and populate cache
-    if (!cachedAssignments || cachedAssignments.length === 0) {
-      const { data: supabaseData, error: supabaseError } = await supabase
+
+    if (!cachedAssignments.length) {
+      const { data: supabaseData, error } = await supabase
         .from('op_bus_assignments')
         .select('*');
+      if (error) throw new Error(error.message);
 
-      if (supabaseError) {
-        throw new Error(supabaseError.message);
-      }
-
-      // Populate cache with Supabase data
       await prisma.assignmentCache.createMany({
-        data: supabaseData.map((assignment: Assignment) => ({
-          assignment_id: assignment.assignment_id,
-          bus_bodynumber: assignment.bus_bodynumber,
-          bus_platenumber: assignment.bus_platenumber,
-          bus_route: assignment.bus_route,
-          bus_type: assignment.bus_type,
-          driver_name: assignment.driver_name,
-          conductor_name: assignment.conductor_name,
-          date_assigned: new Date(assignment.date_assigned),
-          trip_fuel_expense: assignment.trip_fuel_expense,
-          trip_revenue: assignment.trip_revenue,
-          is_revenue_recorded: assignment.is_revenue_recorded,
-          is_expense_recorded: assignment.is_expense_recorded,
-          assignment_type: assignment.assignment_type
-        }))
+        data: supabaseData.map((a: Assignment) => ({
+          assignment_id: a.assignment_id,
+          bus_bodynumber: a.bus_bodynumber,
+          bus_platenumber: a.bus_platenumber,
+          bus_route: a.bus_route,
+          bus_type: a.bus_type,
+          driver_name: a.driver_name,
+          conductor_name: a.conductor_name,
+          date_assigned: new Date(a.date_assigned),
+          trip_fuel_expense: a.trip_fuel_expense,
+          trip_revenue: a.trip_revenue,
+          is_revenue_recorded: a.is_revenue_recorded,
+          is_expense_recorded: a.is_expense_recorded,
+          assignment_type: a.assignment_type,
+        })),
       });
 
-      // Get the newly cached assignments
       cachedAssignments = await prisma.assignmentCache.findMany();
     }
 
     return NextResponse.json({ data: cachedAssignments });
-  } catch (error) {
-    console.error('Error checking/populating cache:', error);
-    return NextResponse.json({ error: 'Failed to get assignments' }, { status: 500 });
+  } catch (err) {
+    console.error('Error checking/populating cache:', err);
+    return NextResponse.json(
+      { error: 'Failed to get assignments' },
+      { status: 500 },
+    );
   }
 }
 
-// POST - Update cache with new assignments
+/*  ─────────────────────────────────────────────────────────
+    POST – Refresh cache
+    ───────────────────────────────────────────────────────── */
 export async function POST() {
   try {
-    const { data: supabaseData, error: supabaseError } = await supabase
+    const { data: supabaseData, error } = await supabase
       .from('op_bus_assignments')
       .select('*');
+    if (error) throw new Error(error.message);
 
-    if (supabaseError) {
-      throw new Error(supabaseError.message);
-    }
-
-    // Begin transaction
     await prisma.$transaction(async (tx) => {
-      // Clear existing cache
-      await tx.assignmentCache.deleteMany({});
-
-      // Insert new cache entries
+      await tx.assignmentCache.deleteMany();
       await tx.assignmentCache.createMany({
-        data: supabaseData.map((assignment: Assignment) => ({
-          assignment_id: assignment.assignment_id,
-          bus_bodynumber: assignment.bus_bodynumber,
-          bus_platenumber: assignment.bus_platenumber,
-          bus_route: assignment.bus_route,
-          bus_type: assignment.bus_type,
-          driver_name: assignment.driver_name,
-          conductor_name: assignment.conductor_name,
-          date_assigned: new Date(assignment.date_assigned),
-          trip_fuel_expense: assignment.trip_fuel_expense,
-          trip_revenue: assignment.trip_revenue,
-          is_revenue_recorded: assignment.is_revenue_recorded,
-          is_expense_recorded: assignment.is_expense_recorded,
-          assignment_type: assignment.assignment_type
-        }))
+        data: supabaseData.map((a: Assignment) => ({
+          assignment_id: a.assignment_id,
+          bus_bodynumber: a.bus_bodynumber,
+          bus_platenumber: a.bus_platenumber,
+          bus_route: a.bus_route,
+          bus_type: a.bus_type,
+          driver_name: a.driver_name,
+          conductor_name: a.conductor_name,
+          date_assigned: new Date(a.date_assigned),
+          trip_fuel_expense: a.trip_fuel_expense,
+          trip_revenue: a.trip_revenue,
+          is_revenue_recorded: a.is_revenue_recorded,
+          is_expense_recorded: a.is_expense_recorded,
+          assignment_type: a.assignment_type,
+        })),
       });
     });
 
     const updatedCache = await prisma.assignmentCache.findMany();
     return NextResponse.json({ data: updatedCache });
-  } catch (error) {
-    console.error('Error updating cache:', error);
-    return NextResponse.json({ error: 'Failed to update cache' }, { status: 500 });
+  } catch (err) {
+    console.error('Error updating cache:', err);
+    return NextResponse.json(
+      { error: 'Failed to update cache' },
+      { status: 500 },
+    );
   }
 }
