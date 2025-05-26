@@ -5,17 +5,11 @@ import { prisma } from '@/lib/prisma'
 import { NextRequest } from 'next/server'
 import { logAudit } from '@/lib/auditLogger'
 
-type RouteContext = {
-  params: {
-    id: string
-  }
-}
-
 export async function GET(
   request: NextRequest,
-  context: RouteContext
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const { id } = params;
 
   const expense = await prisma.expenseRecord.findUnique({
     where: { expense_id: id },
@@ -37,10 +31,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: RouteContext
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = params;
     const data = await request.json();
     const { total_amount, expense_date, other_source, other_category } = data;
 
@@ -124,10 +118,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: RouteContext
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = params;
     
     // Get the record before deletion for audit details
     const expenseToDelete = await prisma.expenseRecord.findUnique({
